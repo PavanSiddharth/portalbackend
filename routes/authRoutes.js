@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 
-const { User } = require('../models/userModel');
+const { User } = require('../models');
 const isEmpty = require('../utils/isEmpty');
 const {
     userAlreadyRegistered,
@@ -19,6 +19,13 @@ const loginInputValidator = require('../validators/loginInputValidator');
 
 const router = express.Router();
 
+// @route    GET: /auth/signup
+// @desc     Signup page
+// @access   Public
+router.get('/signup', isLoggedInValidator, (req, res) => {
+    res.render('auth/register')
+})
+
 // @route    POST: /auth/register
 // @desc     Register the user
 // @access   Public
@@ -26,15 +33,14 @@ router.post('/register', isLoggedInValidator, registerInputValidator, async (req
     const {
         name, username, email, password, type, mobile,
     } = req.body;
+
     const exists = await User.findOne({ username });
     if (exists) return res.status(400).json({ success: false, message: userAlreadyRegistered });
-
     let newUser = new User({
         name, username, email, type, mobile,
     });
     const salt = await bcrypt.genSalt(parseInt(process.env.SALT_LENGTH));
     const hash = await bcrypt.hash(password, salt);
-
     newUser.password = hash;
     newUser = await newUser.save();
     req.session.userId = newUser._id;
@@ -47,6 +53,14 @@ router.post('/register', isLoggedInValidator, registerInputValidator, async (req
     };
     res.json(payload);
 });
+
+// @route    GET: /auth/login
+// @desc     Login page
+// @access   Public
+
+router.get('/login', isLoggedInValidator, (req, res) => {
+    res.render('auth/login');
+})
 
 // @route    POST: /auth/login
 // @desc     Login user
@@ -75,7 +89,7 @@ router.post('/login', isLoggedInValidator, loginInputValidator, async (req, res)
 // @desc     Logout user
 // @access   Public
 
-router.post('/logout', notLoggedInValidator, (req, res) => {
+router.get('/logout', notLoggedInValidator, (req, res) => {
     req.session.destroy((err) => {
         if (err) return res.status(400).json({ success: false, message: logoutError });
 

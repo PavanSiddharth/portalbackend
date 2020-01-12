@@ -12,7 +12,6 @@ module.exports = (req, res, next) => {
     data.password = !isEmpty(data.password) ? data.password : '';
     data.password2 = !isEmpty(data.password2) ? data.password2 : '';
     data.mobile = !isEmpty(data.mobile) ? data.mobile : '';
-    data.latitude  `${data.latitude},${data.longitude}`;
 
     // if (!isEmpty(data.access) && data.access !== process.env.ADMIN_ACCESS_STRING) {
     //     errors.access = 'Invalid specifier!';
@@ -48,10 +47,6 @@ module.exports = (req, res, next) => {
 
     if (validator.isEmpty(data.password2)) {
         errors.password2 = 'Confirm password field is required!';
-    }
-
-    if (validator.isEmpty(data.type)) {
-        errors.type = 'Please specify a type!';
     }
 
     if (!validator.isMobilePhone(data.mobile)) {
