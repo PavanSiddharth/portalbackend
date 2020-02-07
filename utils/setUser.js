@@ -1,5 +1,5 @@
 const isEmpty = require('./isEmpty');
-const { User } = require('../models/userModel');
+const { User } = require('../models');
 //= =========================================================================
 const setUser = async (req, res, next) => {
     const { userId } = req.session;

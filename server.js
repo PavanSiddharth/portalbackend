@@ -5,6 +5,7 @@ const MongoStore = require('connect-mongo')(session);
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
+const slotsRoutes = require('./routes/slotsRoutes');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -29,5 +30,8 @@ app.use(
 
 
 app.use('/auth', authRoutes);
+app.use(notLoggedInValidator);
+app.use(setUser)
+app.use('/slots', slotsRoutes);
 
 app.listen(port, () => console.log(`Server Online on port ${port}...`));
