@@ -1,11 +1,16 @@
 const express = require('express');
 
-const { User } = require('../models');
+const { User, Slot } = require('../models');
 
 const router = express.Router();
 
 router.get('/getslots', async (req, res) => {
-    const slots = await User.findById({_id : req.user._id}, ['slots']);
+    const slotsIds = await User.findById({_id : req.user._id}, ['slots']);
+    const slots = []
+    for(let i=0; i<slotsIds.length; i++) {
+        const slot = await Slot.findById(slotsIds[i]);
+        slots.push(slot);
+    }
     res.json(slots);
 })
 

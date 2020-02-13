@@ -8,11 +8,17 @@ const authRoutes = require('./routes/authRoutes');
 const slotsRoutes = require('./routes/slotsRoutes');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 6000;
+
+const devCorsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+};
 
 const notLoggedInValidator = require('./validators/notLoggedInValidator');
 const setUser = require('./utils/setUser');
 
+app.use(devCorsOptions);
 app.set("view engine","ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
