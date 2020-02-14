@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const userSchema = new mongoose.Schema({
     type: { type: String, required: false, default: "USER" },
@@ -8,7 +9,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     email: { type: String, required: true },
     mobile: { type: String, required: true },
-    slots:  [{ type: Schema.Types.ObjectId }]
+    slots:  [{ type: Schema.Types.ObjectId, ref : 'Slots' }]
 });
 
 module.exports = mongoose.model('User', userSchema);

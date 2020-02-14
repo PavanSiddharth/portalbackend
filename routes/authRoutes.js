@@ -19,11 +19,8 @@ const loginInputValidator = require('../validators/loginInputValidator');
 
 const router = express.Router();
 
-// @route    GET: /auth/signup
-// @desc     Signup page
-// @access   Public
-router.get('/signup', isLoggedInValidator, (req, res) => {
-    res.render('auth/register')
+router.get('/user', notLoggedInValidator, (req, res) => {
+    res.json(req.user);
 })
 
 // @route    POST: /auth/register
@@ -54,23 +51,17 @@ router.post('/register', isLoggedInValidator, registerInputValidator, async (req
     res.json(payload);
 });
 
-// @route    GET: /auth/login
-// @desc     Login page
-// @access   Public
-
-router.get('/login', isLoggedInValidator, (req, res) => {
-    res.render('auth/login');
-})
-
 // @route    POST: /auth/login
 // @desc     Login user
 // @access   Public
 
 router.post('/login', isLoggedInValidator, loginInputValidator, async (req, res) => {
+    console.log(req.body);
     const { username, password } = req.body;
     const user = await User.findOne({ username }).lean();
+    console.log(user);
     if (!user) return res.status(404).json({ success: false, message: usernameNotFound });
-
+    console.log(3)
     const matched = await bcrypt.compare(password, user.password);
     if (!matched) return res.status(400).json({ success: false, message: passwordIncorrect });
 

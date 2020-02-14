@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const slotSchema = new mongoose.Schema({
     expertId : { type: Schema.Types.ObjectId, ref: 'User', required: true},
