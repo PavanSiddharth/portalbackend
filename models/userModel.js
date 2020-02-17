@@ -9,7 +9,10 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     email: { type: String, required: true },
     mobile: { type: String, required: true },
-    slots:  { type: Object }
+    slots:  { type: Object },
+    bookedSlots : [{ type: Schema.Types.ObjectId }],
+    institution : { type: String },
+    branch : { type: String }
 });
 
 module.exports = mongoose.model('User', userSchema);
