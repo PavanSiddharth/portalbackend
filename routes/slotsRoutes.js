@@ -5,29 +5,23 @@ const { User, Slot } = require('../models');
 const router = express.Router();
 
 router.get('/getslots', async (req, res) => {
-    const slotsIds = await User.findById({_id : req.user._id}, ['slots']);
-    const slots = []
-    for(let i=0; i<slotsIds.length; i++) {
-        const slot = await Slot.findById(slotsIds[i]);
-        slots.push(slot);
+    const fetchedBookedSlots = await Slot.find({ expertId : req.user._id})
+    const bookedSlots = {};
+    for(let i=0; i<fetchedBookedSlots.length; i++) {
+        const date = fetchedBookedSlots[i].date;
+        const slot = fetchedBookedSlots[i].slot;
+        const id = fetchedBookedSlots[i]._id;
+        if (bookedSlots[date] === undefined) bookedSlots[date] = {};
+        bookedSlots[date][slot] = id;
     }
-    res.json(slots);
+    res.json(bookedSlots);
 })
 
 router.post('/addslots', async (req, res) => {
-    const { slots } = req.body;
-    await User.findByIdAndUpdate(
-        { _id : req.user._id },
-        { slots : slots},
-        (err, res) => {
-            if(err) {
-                console.log(err);
-            }
-            else {
-                console.log("SUCCESS!");
-            }
-        }
-    )
+    const expert = await User.findOneAndUpdate({_id: req.user._id}, {
+        slots: req.body,
+    })
+    expert.save();
 })
 
 router.get('/bookslot', async (req, res) => {

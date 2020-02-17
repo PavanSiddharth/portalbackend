@@ -56,12 +56,9 @@ router.post('/register', isLoggedInValidator, registerInputValidator, async (req
 // @access   Public
 
 router.post('/login', isLoggedInValidator, loginInputValidator, async (req, res) => {
-    console.log(req.body);
     const { username, password } = req.body;
     const user = await User.findOne({ username }).lean();
-    console.log(user);
     if (!user) return res.status(404).json({ success: false, message: usernameNotFound });
-    console.log(3)
     const matched = await bcrypt.compare(password, user.password);
     if (!matched) return res.status(400).json({ success: false, message: passwordIncorrect });
 
