@@ -24,15 +24,25 @@ router.post('/addslots', async (req, res) => {
     expert.save();
 })
 
-router.get('/bookslot', async (req, res) => {
-    const { slot } = req.body;
-    const expert = await User.findById(slot.expert);
-    expert.slots[slot.date][slot.time] = req.user._id;
+router.post('/bookslot', async (req, res) => {
+    const { slot, expertId, date } = req.body;
+    
+    const bookedSlot = await Slot.create({
+        expertId, slot,
+        Date : date,
+        userId : req.user._id,
+    })
+    console.log(bookedSlot)
+    const expert = await User.findById(expertId);
+    expert.slots[date][slot] = bookedSlot._id;
+    // expert.bookedSlot.push(bookedSlot._id);
     const updatedExpert = await expert.save();
 
     const user = await User.findById(req.user._id);
-    user.slot[slot.date][slot.time] = slot.expert;
+    // user.bookedSlot.push(bookedSlot._id);
     const updatedUser = await user.save();
+
+    res.json(updatedExpert)
 })
 
 module.exports = router;
