@@ -19,10 +19,6 @@ const loginInputValidator = require('../validators/loginInputValidator');
 
 const router = express.Router();
 
-router.get('/user', notLoggedInValidator, (req, res) => {
-    res.json(req.user);
-})
-
 // @route    POST: /auth/register
 // @desc     Register the user
 // @access   Public

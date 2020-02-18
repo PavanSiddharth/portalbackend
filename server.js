@@ -39,7 +39,8 @@ app.use(
 
 app.use('/auth', authRoutes);
 app.use(notLoggedInValidator);
-app.use(setUser)
+app.use(setUser);
+app.get('/auth/user', (req, res) => res.json(req.user));
 app.use('/slots', slotsRoutes);
 app.use('/expert', expertRoutes);
 

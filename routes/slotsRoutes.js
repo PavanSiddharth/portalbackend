@@ -26,23 +26,32 @@ router.post('/addslots', async (req, res) => {
 
 router.post('/bookslot', async (req, res) => {
     const { slot, expertId, date } = req.body;
+    try {
+        const bookedSlot = await Slot.create({
+            expertId, slot,
+            Date : date,
+            userId : req.user._id,
+        })
+        console.log(bookedSlot)
+        
+        const expert = await User.findById(expertId);
+        expert.slots[date][slot] = bookedSlot._id;
+        if(expert.bookedSlots === undefined) expert.bookedSlot = [];
+        await expert.bookedSlots.push(bookedSlot._id);
+        expert.markModified(expert.slots[date][slot]);
+        const updatedExpert = await expert.save();
+        
+        const user = await User.findById(req.user._id);
+        if(user.bookedSlots === undefined) user.bookedSlots = [];
+        await user.bookedSlots.push(bookedSlot._id);
+        const updatedUser = await user.save();
     
-    const bookedSlot = await Slot.create({
-        expertId, slot,
-        Date : date,
-        userId : req.user._id,
-    })
-    console.log(bookedSlot)
-    const expert = await User.findById(expertId);
-    expert.slots[date][slot] = bookedSlot._id;
-    // expert.bookedSlot.push(bookedSlot._id);
-    const updatedExpert = await expert.save();
-
-    const user = await User.findById(req.user._id);
-    // user.bookedSlot.push(bookedSlot._id);
-    const updatedUser = await user.save();
-
-    res.json(updatedExpert)
+        console.log(expert, updatedExpert)
+    } catch (error) {
+        console.log(error)
+        res.json(error)
+    }
+    
 })
 
 module.exports = router;
