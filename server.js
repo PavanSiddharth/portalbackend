@@ -13,7 +13,7 @@ const app = express();
 const port = process.env.PORT || 8001;
 
 const devCorsOptions = {
-    origin: 'http://localhost:3001',
+    origin: 'http://localhost:3000',
     credentials: true,
 };
 

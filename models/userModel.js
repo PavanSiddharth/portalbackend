@@ -3,16 +3,17 @@ const { Schema } = mongoose;
 
 const userSchema = new mongoose.Schema({
     type: { type: String, required: false, default: "USER" },
-    profilePic: { type: String },
+    pic: { type: String, default: 'defaultpic' },
     name: { type: String, required: true },
     username: { type: String, required: true },
     password: { type: String, required: true },
     email: { type: String, required: true },
     mobile: { type: String, required: true },
     slots:  { type: Object },
-    bookedSlots : [{ type: Schema.Types.ObjectId }],
+    bookedSlots : { type: Object },
     institution : { type: String },
-    branch : { type: String }
+    branch : { type: String },
+    desc : {type : String}
 });
 
 module.exports = mongoose.model('User', userSchema);

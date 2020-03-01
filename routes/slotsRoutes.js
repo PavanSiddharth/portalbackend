@@ -21,6 +21,7 @@ router.post('/addslots', async (req, res) => {
     const expert = await User.findOneAndUpdate({_id: req.user._id}, {
         slots: req.body,
     })
+    console.log(expert);
     expert.save();
 })
 
@@ -38,15 +39,16 @@ router.post('/bookslot', async (req, res) => {
         expert.slots[date][slot] = bookedSlot._id;
         if(expert.bookedSlots === undefined) expert.bookedSlot = [];
         await expert.bookedSlots.push(bookedSlot._id);
-        expert.markModified(expert.slots[date][slot]);
+        expert.markModified('bookedSlots');
+        expert.markModified('slots');
         const updatedExpert = await expert.save();
         
         const user = await User.findById(req.user._id);
         if(user.bookedSlots === undefined) user.bookedSlots = [];
         await user.bookedSlots.push(bookedSlot._id);
+        user.markModified('bookedSlots');
         const updatedUser = await user.save();
-    
-        console.log(expert, updatedExpert)
+        res.json(bookedSlot);
     } catch (error) {
         console.log(error)
         res.json(error)
