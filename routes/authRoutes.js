@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 
-const { User } = require('../models/userModel');
+const { User } = require('../models');
 const isEmpty = require('../utils/isEmpty');
 const {
     userAlreadyRegistered,
@@ -26,15 +26,14 @@ router.post('/register', isLoggedInValidator, registerInputValidator, async (req
     const {
         name, username, email, password, type, mobile,
     } = req.body;
+
     const exists = await User.findOne({ username });
     if (exists) return res.status(400).json({ success: false, message: userAlreadyRegistered });
-
     let newUser = new User({
         name, username, email, type, mobile,
     });
     const salt = await bcrypt.genSalt(parseInt(process.env.SALT_LENGTH));
     const hash = await bcrypt.hash(password, salt);
-
     newUser.password = hash;
     newUser = await newUser.save();
     req.session.userId = newUser._id;
@@ -56,7 +55,6 @@ router.post('/login', isLoggedInValidator, loginInputValidator, async (req, res)
     const { username, password } = req.body;
     const user = await User.findOne({ username }).lean();
     if (!user) return res.status(404).json({ success: false, message: usernameNotFound });
-
     const matched = await bcrypt.compare(password, user.password);
     if (!matched) return res.status(400).json({ success: false, message: passwordIncorrect });
 
@@ -75,7 +73,7 @@ router.post('/login', isLoggedInValidator, loginInputValidator, async (req, res)
 // @desc     Logout user
 // @access   Public
 
-router.post('/logout', notLoggedInValidator, (req, res) => {
+router.get('/logout', notLoggedInValidator, (req, res) => {
     req.session.destroy((err) => {
         if (err) return res.status(400).json({ success: false, message: logoutError });
 
