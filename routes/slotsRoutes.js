@@ -37,7 +37,7 @@ router.post('/bookslot', async (req, res) => {
         
         const expert = await User.findById(expertId);
         // expert.slots[date][slot] = bookedSlot._id;
-        if(expert.bookedSlots === undefined) expert.bookedSlot = [];
+        if(expert.bookedSlots === undefined) expert.bookedSlots = [];
         await expert.bookedSlots.push(bookedSlot._id);
         expert.markModified('bookedSlots');
         expert.markModified('slots');

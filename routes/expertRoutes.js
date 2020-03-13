@@ -5,8 +5,36 @@ const { User, Slot } = require('../models');
 const router = express.Router();
 
 router.get('/getexperts', async (req, res) => {
-    const experts = await User.find({type : "EXPERT"})
-    res.json(experts);
+    try {
+        const experts = await User.find({type : "EXPERT"});
+        const output = {
+            expertise : {},
+            institution : {},
+            exam : {},
+        };
+
+        console.log(output);
+
+        for(let i=0; i<experts.length; i++) {
+            const expert = experts[i];
+            console.log(output.institution[expert.institution.split(',')[0]] === undefined);
+            if (output.institution[expert.institution.split(',')[0]] === undefined) {
+                output.institution[expert.institution.split(',')[0]] = [];
+            }
+            output.institution[expert.institution.split(',')[0]].push(expert);
+            if (output.expertise[expert.branch] === undefined) {
+                output.expertise[expert.branch] = [];
+            }
+            output.expertise[expert.branch].push(expert);
+        }
+
+        console.log(output);
+        res.json(output);
+    
+    } catch (error) {
+        
+    }    
+
 })
 
 router.post('/edit', async (req, res) => {
