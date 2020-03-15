@@ -56,4 +56,17 @@ router.post('/bookslot', async (req, res) => {
     
 })
 
+router.post('/approve', async (req, res) => {
+    try {
+        const slot = await Slot.findByIdAndUpdate(req.body.id, {
+            approved : true,
+        })
+        console.log(slot);
+        const approvedSlot = await slot.save();
+        res.json(approvedSlot);
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 module.exports = router;
