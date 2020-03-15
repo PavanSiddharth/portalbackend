@@ -61,12 +61,38 @@ router.post('/approve', async (req, res) => {
         const slot = await Slot.findByIdAndUpdate(req.body.id, {
             approved : true,
         })
-        console.log(slot);
         const approvedSlot = await slot.save();
         res.json(approvedSlot);
     } catch (error) {
         console.log(error)
     }
 })
+
+router.post('/reject', async (req, res) => {
+    try {
+        const slot = await Slot.findByIdAndRemove(req.body.id);
+        
+        const user = await User.findById(slot.userId);
+        let i = user.bookedSlots.indexOf(slot._id);
+        user.bookedSlots.splice(i,1);
+        user.markModified('bookedSlots');
+        const updatedUser = await user.save();
+
+        const expert = await User.findById(slot.expertId);
+        i = expert.bookedSlots.indexOf(slot._id);
+        expert.bookedSlots.splice(i,1);
+        expert.markModified('bookedSlots');
+        const updatedExpert = await expert.save();
+
+        console.log(5, slot, slot.$isDeleted());
+        console.log(updatedExpert);
+        console.log(updatedUser); 
+
+        res.json(slot);
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 
 module.exports = router;
