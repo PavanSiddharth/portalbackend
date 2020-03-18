@@ -21,6 +21,7 @@
     "express-session": "^1.17.0",
     "mongo": "^0.1.0",
     "mongoose": "^5.8.7",
+    "nodemailer": "^6.4.5",
     "validator": "^12.1.0"
   }
 }
