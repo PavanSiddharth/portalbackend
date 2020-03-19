@@ -26,7 +26,7 @@ const loginInputValidator = require("../validators/loginInputValidator");
 
 const router = express.Router();
 
-var rand, mailOptions, host, link;
+let rand, mailOptions, host, link;
 // @route    POST: /auth/register
 // @desc     Register the user
 // @access   Public
@@ -100,7 +100,7 @@ router.post(
 router.get("/verify", async (req, res) => {
     console.log(req.protocol + "://" + req.get("host"));
     if (req.protocol + "://" + req.get("host") == "http://" + host) {
-        var userid = req.query.user;
+        const userid = req.query.user;
         console.log("Domain is matched. Information is from Authentic email");
         if (req.query.id == rand) {
             const user = await User.findByIdAndUpdate(
