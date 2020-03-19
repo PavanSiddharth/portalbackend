@@ -67,6 +67,15 @@ router.get('/appointments', async (req, res) => {
     }
 })
 
-
+router.get('/profile', async (req, res) => {
+    try {
+        const expert = await User.findById(req.user._id, 
+            ['pic', 'name', 'username', 'email', 'mobile', 'institution', 'branch', 'desc']
+        );
+        res.json(expert);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 module.exports = router;
