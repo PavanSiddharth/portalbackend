@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema({
     institution: { type: String },
     branch: { type: String },
     desc: { type: String },
-    emailVerified: { type: Boolean, default: false }
+    emailVerified: { type: Boolean, default: false },
+    chats: [{ type: Schema.Types.ObjectId }]
 });
 
 module.exports = mongoose.model("User", userSchema);

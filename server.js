@@ -8,6 +8,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const slotsRoutes = require('./routes/slotsRoutes');
 const expertRoutes = require('./routes/expertRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 const port = process.env.PORT || 8001;
@@ -43,5 +44,6 @@ app.use(setUser);
 app.get('/auth/user', (req, res) => res.json(req.user));
 app.use('/slots', slotsRoutes);
 app.use('/expert', expertRoutes);
+app.use('/chat', chatRoutes);
 
 app.listen(port, () => console.log(`Server Online on port ${port}...`));

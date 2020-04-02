@@ -27,9 +27,6 @@ const loginInputValidator = require("../validators/loginInputValidator");
 const router = express.Router();
 
 let rand, mailOptions, host, link;
-// @route    POST: /auth/register
-// @desc     Register the user
-// @access   Public
 router.post(
     "/register",
     isLoggedInValidator,
@@ -130,9 +127,6 @@ router.get("/verify", async (req, res) => {
     }
 });
 
-// @route    POST: /auth/login
-// @desc     Login user
-// @access   Public
 
 router.post(
     "/login",
@@ -162,10 +156,6 @@ router.post(
         res.json(payload);
     }
 );
-
-// @route    POST: /auth/logout
-// @desc     Logout user
-// @access   Public
 
 router.get("/logout", notLoggedInValidator, (req, res) => {
     req.session.destroy(err => {

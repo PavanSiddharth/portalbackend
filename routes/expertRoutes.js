@@ -53,11 +53,11 @@ router.post('/edit', async (req, res) => {
 router.get('/appointments', async (req, res) => {
     try {
         const expert = await User.findById(req.user._id, ['bookedSlots']);
-        await expert.populate()
         const { bookedSlots } = expert
         const appointments = [];
         for(let i=0; i<bookedSlots.length; i++) {
             const slot = await Slot.findById(bookedSlots[i]);
+            if(slot == undefined) continue;
             const user = await User.findById(slot.userId, ['name', 'pic']);
             appointments.push({ slot, user});
         }

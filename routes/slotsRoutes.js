@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { User, Slot } = require('../models');
+const { User, Slot, Chat } = require('../models');
 
 const router = express.Router();
 
@@ -33,7 +33,6 @@ router.post('/bookslot', async (req, res) => {
             Date : date,
             userId : req.user._id,
         })
-        console.log(bookedSlot)
         
         const expert = await User.findById(expertId);
         // expert.slots[date][slot] = bookedSlot._id;
@@ -41,14 +40,17 @@ router.post('/bookslot', async (req, res) => {
         await expert.bookedSlots.push(bookedSlot._id);
         expert.markModified('bookedSlots');
         expert.markModified('slots');
-        const updatedExpert = await expert.save();
         
         const user = await User.findById(req.user._id);
         if(user.bookedSlots === undefined) user.bookedSlots = [];
         await user.bookedSlots.push(bookedSlot._id);
         user.markModified('bookedSlots');
+
+        const updatedExpert = await expert.save();
         const updatedUser = await user.save();
+
         res.json(bookedSlot);
+
     } catch (error) {
         console.log(error)
         res.json(error)
@@ -62,6 +64,31 @@ router.post('/approve', async (req, res) => {
             approved : true,
         })
         const approvedSlot = await slot.save();
+        console.log(approvedSlot);
+        const expert = await User.findById(approvedSlot.expertId);
+        const user = await User.findById(approvedSlot.userId);
+        
+        const chat = {
+            expertId : approvedSlot.expertId,
+            userId : approvedSlot.userId,
+            slotId : approvedSlot._id,
+            expertName : expert.name,
+            userName : user.name,
+            slotTimings : approvedSlot.slot,
+        }
+        const newChat = await Chat.create(chat);
+        if(expert.chats === undefined) expert.chats = []
+        expert.chats.push(newChat._id)
+        
+        if(user.chats === undefined) user.chats = []
+        user.chats.push(newChat._id)
+        
+        expert.markModified('chats')
+        user.markModified('chats')
+
+        const updatedExpert = await expert.save();
+        const updatedUser = await user.save();       
+
         res.json(approvedSlot);
     } catch (error) {
         console.log(error)
@@ -83,11 +110,6 @@ router.post('/reject', async (req, res) => {
         expert.bookedSlots.splice(i,1);
         expert.markModified('bookedSlots');
         const updatedExpert = await expert.save();
-
-        console.log(5, slot, slot.$isDeleted());
-        console.log(updatedExpert);
-        console.log(updatedUser); 
-
         res.json(slot);
     } catch (error) {
         console.log(error)

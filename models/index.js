@@ -27,3 +27,4 @@ process.on('SIGINT', () => {
 
 module.exports.User = require('./userModel');
 module.exports.Slot = require('./slotModel');
+module.exports.Chat = require('./chatModel');
