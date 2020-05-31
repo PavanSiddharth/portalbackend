@@ -1,7 +1,7 @@
 const express = require('express');
 
-const { User, Slot } = require('../models');
-
+const { User, Slot} = require('../models');
+const Expert  = require('../models/expertModel');
 const router = express.Router();
 
 router.get('/getexperts', async (req, res) => {
@@ -72,7 +72,16 @@ router.get('/profile', async (req, res) => {
         const expert = await User.findById(req.user._id, 
             ['pic', 'name', 'username', 'email', 'mobile', 'institution', 'branch', 'desc']
         );
-        res.json(expert);
+        const expert_data = await Expert.findOne({expertId:req.user._id},function(err, result) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(result);
+            }
+          }); 
+        var expert1 = {expert : expert , expert_data:expert_data};
+        console.log(expert1);
+        res.json(expert1);
     } catch (error) {
         console.log(error);
     }
