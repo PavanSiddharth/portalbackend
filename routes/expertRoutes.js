@@ -70,11 +70,11 @@ router.get('/appointments', async (req, res) => {
 router.post('/wishlist', async (req, res) => {
     try {
         const wishlist = await User.findById(req.body.expertId,
-            ['wishlist']
+          ['wishlist']
         );
         console.log("Wishlist is "+ !(wishlist.wishlist));
         
-        const expert = await User.findOneAndUpdate({_id: req.body.expertId}, {wishlist: true}, {
+        const expert = await User.findOneAndUpdate({_id: req.body.expertId}, {wishlist:!(wishlist.wishlist)}, {
             new:true
         } 
           );  
