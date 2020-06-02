@@ -67,6 +67,37 @@ router.get('/appointments', async (req, res) => {
     }
 })
 
+router.post('/wishlist', async (req, res) => {
+    try {
+        const wishlist = await User.findById(req.body.expertId,
+          ['wishlist']
+        );
+        console.log("Wishlist is "+ !(wishlist.wishlist));
+        
+        const expert = await User.findOneAndUpdate({_id: req.body.expertId}, {wishlist:!(wishlist.wishlist)}, {
+            new:true
+        } 
+          );  
+        /*const expert = await User.findByIdAndUpdate(
+            { _id:req.body.expertId },
+            { wishlist:true },
+            function(err, result) {
+              if (err) {
+                res.send(err);
+              } else {
+                res.send(result);
+              }
+            }
+          );*/
+          res.send(expert);
+          console.log(expert)
+            
+    }
+     catch (error) {
+        console.log(error);
+    }
+})
+
 router.get('/profile', async (req, res) => {
     try {
         const expert = await User.findById(req.user._id, 
