@@ -37,7 +37,7 @@ router.get('/getexperts', async (req, res) => {
 
 })
 
-router.post('/edit', async (req, res) => {
+/*router.post('/edit', async (req, res) => {
     try {
         const updatedExpert = await User.findByIdAndUpdate(req.user._id,
             req.body
@@ -48,7 +48,7 @@ router.post('/edit', async (req, res) => {
         console.log(error)
         res.json(error)
     }
-})
+})*/
 
 router.get('/appointments', async (req, res) => {
     try {
@@ -117,5 +117,53 @@ router.get('/profile', async (req, res) => {
         console.log(error);
     }
 })
+
+
+router.post('/edit', async (req, res) => {
+    try {
+        if(req.body.property=="name")
+        {
+        const expert = await User.findOneAndUpdate({_id: req.user._id}, {name:req.body.value}, {
+            new:true
+        } 
+          );  
+          res.send(expert);
+          console.log(expert)
+    }
+      else if(req.body.property=="username")
+      {
+        const expert = await User.findOneAndUpdate({_id: req.user._id}, {username:req.body.value}, {
+            new:true
+        } 
+          );  
+          res.send(expert);
+          console.log(expert)
+    }
+      else if(req.body.property=="email")
+      {
+        const expert = await User.findOneAndUpdate({_id: req.user._id}, {email:req.body.value}, {
+            new:true
+        } 
+          );  
+          res.send(expert);
+          console.log(expert)
+    }
+      else if(req.body.property=="mobile")
+      {
+        const expert = await User.findOneAndUpdate({_id: req.user._id}, {mobile:req.body.value}, {
+            new:true
+        } 
+          );  
+          res.send(expert);
+          console.log(expert)
+    }
+    
+            
+    }
+     catch (error) {
+        console.log(error);
+    }
+})
+
 
 module.exports = router;
