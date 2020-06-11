@@ -15,7 +15,9 @@ const userSchema = new mongoose.Schema({
     branch: { type: String },
     desc: { type: String },
     emailVerified: { type: Boolean, default: false },
-    wishlist : {type: Boolean, default: false}
+    wishlist : {type: Boolean, default: false},
+    current_for_user : {type: Boolean, default: false},
+    past_for_user : {type: Boolean, default: false}
 });
 
 module.exports = mongoose.model("User", userSchema);
