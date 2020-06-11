@@ -5,26 +5,24 @@ const { User, Slot } = require('../models');
 const router = express.Router();
 
 router.get('/appointments', async (req, res) => {
-    const user = await User.findById(req.user._id);
+    const user = await User.find({type:"EXPERT"});
     const appointments = { 
-        prev: [],
+        wishlist: [],
         upcoming : [],
-        pending : []
+        past : []
     };
-    const today = new Date()
-    const bookedSlots = user.bookedSlots;
-    for(let i=0; i<bookedSlots.length; i++){
-        const slot = await Slot.findById(bookedSlots[i]);
-        const expert = await User.findById(slot.expertId);
-        if(slot.approved === false) {
-            appointments.pending.push(expert);
+    console.log(user.length);
+    for(let i=0; i<user.length; i++){
+        if(user[i].wishlist === true) {
+            appointments.wishlist.push(user[i]);
         }
-        else if (slot.Date < today) {
-            appointments.prev.push(expert);
+        if (user[i].current_for_user === true) {
+            appointments.upcoming.push(user[i]);
         }
-        else {
-            appointments.upcoming.push(expert);
+        if (user[i].past_for_user === true) {
+            appointments.past.push(user[i]);
         }
     }
-    res.json(expert);
+    res.json(appointments);
 })
+module.exports = router;

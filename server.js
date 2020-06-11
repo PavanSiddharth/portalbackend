@@ -11,6 +11,7 @@ const authRoutes = require('./routes/authRoutes');
 const slotsRoutes = require('./routes/slotsRoutes');
 const expertRoutes = require('./routes/expertRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const server = http.createServer(app)
@@ -43,6 +44,7 @@ app.use(
 
 
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 app.use(notLoggedInValidator);
 app.use(setUser);
 app.get('/auth/user', (req, res) => res.json(req.user));
