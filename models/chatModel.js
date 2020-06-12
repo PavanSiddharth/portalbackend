@@ -2,9 +2,8 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const chatSchema = new mongoose.Schema({
-    from:{type: String,required: true},
-    userid:{type:String},
-    expertid:{type:String},
+    sender:{type:String},
+    receiver:{type:String},
     message:{type: String}
     },
     { timestamps:true }

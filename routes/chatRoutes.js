@@ -1,16 +1,15 @@
 const express = require('express');
 
-const { Chat } = require('../models/chatModel');
+const { Expert,User,Slot,Chat } = require('../models');
 
 const router = express.Router();
 
-router.get('/chats',async (req, res) => {
+router.post('/',async (req, res) => {
     try {
-
+        console.log(req.body);
         const chatinfo = new Chat({
-            from: req.body.type,
-            userid: req.body.userid,
-            expertid: req.body.expertid,
+            sender: req.body.sender,
+            receiver: req.body.receiver,
             message: req.body.message
         })
         chatinfo.save()
