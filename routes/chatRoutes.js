@@ -36,6 +36,27 @@ router.post('/',async (req, res) => {
         }
         messageList.push(currentblock)
     }
+    const chat1 = await Chat.find({ "sender": req.body.receiver})
+    const senderName1 = (await User.findById(req.body.receiver)).name
+    const receiverName1 = (await User.findById(req.body.sender)).name
+    console.log(chat1)
+
+    for(let i=0; i<chat1.length; i++){
+        const currentChat = chat1[i]
+        const currentblock = {
+            "text": currentChat.message,
+            "id": currentChat._id,
+            "sender":{
+                "name":senderName1,
+                "uid": currentChat.sender
+            },
+            "receiver":{
+                "name": receiverName1,
+                "uid": currentChat.receiver
+            }
+        }
+        messageList.push(currentblock)
+    }
     res.send({messageList})
     console.log("This is the messageList")
     console.log(messageList)
