@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/',async (req, res) => {
     try {
-        const messageList = [];
+        var messageList = [];
         console.log(req.body);
         const chatinfo = new Chat({
             sender: req.body.sender,
@@ -15,47 +15,45 @@ router.post('/',async (req, res) => {
         })
         chatinfo.save()
 
-    const chat = await Chat.find({ "sender": req.body.sender})
+    const chat = await Chat.find({ $or : [ { "sender": req.body.sender }, { "sender": req.body.receiver} ] })
+
+    
     const senderName = (await User.findById(req.body.sender)).name
     const receiverName = (await User.findById(req.body.receiver)).name
     console.log(chat)
 
     for(let i=0; i<chat.length; i++){
-        const currentChat = chat[i]
-        const currentblock = {
-            "text": currentChat.message,
-            "id": currentChat._id,
-            "sender":{
-                "name":senderName,
-                "uid": currentChat.sender
-            },
-            "receiver":{
-                "name": receiverName,
-                "uid": currentChat.receiver
+        var currentChat = chat[i]
+        var currentblock = {}
+        if(currentChat.sender == req.body.sender){
+             currentblock = {
+                "text": currentChat.message,
+                "id": currentChat._id,
+                "sender":{
+                    "name":senderName,
+                    "uid": currentChat.sender
+                },
+                "receiver":{
+                    "name": receiverName,
+                    "uid": currentChat.receiver
+                }
             }
         }
-        messageList.push(currentblock)
-    }
-    const chat1 = await Chat.find({ "sender": req.body.receiver})
-    const senderName1 = (await User.findById(req.body.receiver)).name
-    const receiverName1 = (await User.findById(req.body.sender)).name
-    console.log(chat1)
-
-    for(let i=0; i<chat1.length; i++){
-        const currentChat = chat1[i]
-        const currentblock = {
-            "text": currentChat.message,
-            "id": currentChat._id,
-            "sender":{
-                "name":senderName1,
-                "uid": currentChat.sender
-            },
-            "receiver":{
-                "name": receiverName1,
-                "uid": currentChat.receiver
+        else{
+             currentblock = {
+                "text": currentChat.message,
+                "id": currentChat._id,
+                "sender":{
+                    "name":receiverName,
+                    "uid": currentChat.receiver
+                },
+                "receiver":{
+                    "name": senderName,
+                    "uid": currentChat.sender
+                }
             }
         }
-        messageList.push(currentblock)
+    messageList.push(currentblock)
     }
     res.send({messageList})
     console.log("This is the messageList")
