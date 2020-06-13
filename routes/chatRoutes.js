@@ -45,11 +45,11 @@ router.post('/',async (req, res) => {
                 "id": currentChat._id,
                 "sender":{
                     "name":receiverName,
-                    "uid": currentChat.receiver
+                    "uid": currentChat.sender
                 },
                 "receiver":{
                     "name": senderName,
-                    "uid": currentChat.sender
+                    "uid": currentChat.receiver
                 }
             }
         }
