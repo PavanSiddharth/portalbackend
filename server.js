@@ -12,6 +12,7 @@ const slotsRoutes = require('./routes/slotsRoutes');
 const expertRoutes = require('./routes/expertRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const userRoutes = require('./routes/userRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 const server = http.createServer(app)
@@ -25,6 +26,15 @@ const devCorsOptions = {
 
 const notLoggedInValidator = require('./validators/notLoggedInValidator');
 const setUser = require('./utils/setUser');
+
+const Razorpay = require('razorpay');
+
+const instance = new Razorpay({
+  key_id: "rzp_test_4JLpoFGA17xkZq",
+  key_secret: "89CUTDzmDYbIYqgpUabjGtav"
+});
+
+
 
 app.use(cors(devCorsOptions));
 app.set("view engine","ejs");
@@ -45,6 +55,7 @@ app.use(
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/payment', paymentRoutes);
 app.use(notLoggedInValidator);
 app.use(setUser);
 app.get('/auth/user', (req, res) => res.json(req.user));
@@ -52,3 +63,6 @@ app.use('/slots', slotsRoutes);
 app.use('/expert', expertRoutes);
 app.use('/chats', chatRoutes);
 app.listen(port, () => console.log(`Server Online on port ${port}...`));
+
+
+
