@@ -55,6 +55,7 @@ app.use(
 
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/payment', paymentRoutes);
 app.use(notLoggedInValidator);
 app.use(setUser);
 app.get('/auth/user', (req, res) => res.json(req.user));
@@ -65,21 +66,3 @@ app.listen(port, () => console.log(`Server Online on port ${port}...`));
 
 
 
-app.get('/payment/:payment_id/:amount', (req, res) => {
-    const {payment_id } = req.params;
-    const amount = Number(req.params.amount);
-    instance.payments.capture(payment_id, amount).then((data) => {
-      res.json(data);
-    }).catch((error) => {
-      res.json(error);
-    });
-  });
-
-  app.get('/payment/refund/:payment_id', (req, res) => {
-    const {payment_id} = req.params;
-    instance.payments.refund(payment_id).then((data) => {
-      res.json(data);
-    }).catch((error) => {
-      res.json(error);
-    });
-  });
