@@ -3,6 +3,7 @@ const express = require('express');
 const { User, Slot } = require('../models');
 
 const Razorpay = require('razorpay');
+const { findByIdAndUpdate } = require('../models/userModel');
 
 const router = express.Router();
 
@@ -35,4 +36,18 @@ router.post('/status',(req,res)=>{
       console.log(error);
     }
   })
+
+router.post('/success' , async (req,res) => {
+    try{
+        const userinf = await User.findOne({ type: "USER", _id : req.body.userID })
+        var paidarray = userinf.paid
+        paidarray.push(req.body.expertID)
+        const newdoc =  await User.findByIdAndUpdate( { _id : req.body.userID } , { paid: paidarray } )
+        res.send("Changes made in the db")
+    }
+    catch(error){
+      console.log(error);
+    }
+})
+
 module.exports = router;
