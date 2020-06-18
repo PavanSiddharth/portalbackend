@@ -50,7 +50,7 @@ router.get('/getexperts', async (req, res) => {
     }
 })*/
 
-router.get('/appointments', async (req, res) => {
+router.post('/appointments', async (req, res) => {
     try {
         const expert = await User.findById(req.user._id, ['bookedSlots']);
         await expert.populate()
