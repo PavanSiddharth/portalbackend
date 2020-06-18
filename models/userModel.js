@@ -17,7 +17,8 @@ const userSchema = new mongoose.Schema({
     emailVerified: { type: Boolean, default: false },
     wishlist : {type: Boolean, default: false},
     current_for_user : {type: Boolean, default: false},
-    past_for_user : {type: Boolean, default: false}
+    past_for_user : {type: Boolean, default: false},
+    paid : { type: Array }
 });
 
 module.exports = mongoose.model("User", userSchema);
