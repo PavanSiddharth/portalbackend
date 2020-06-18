@@ -52,16 +52,29 @@ router.get('/getexperts', async (req, res) => {
 
 router.get('/appointments', async (req, res) => {
     try {
-        const expert = await User.findById(req.user._id, ['bookedSlots']);
-        await expert.populate()
-        const { bookedSlots } = expert
-        const appointments = [];
-        for(let i=0; i<bookedSlots.length; i++) {
-            const slot = await Slot.findById(bookedSlots[i]);
-            const user = await User.findById(slot.userId, ['name', 'pic']);
-            appointments.push({ slot, user});
+        // const expert = await User.findById(req.user._id, ['bookedSlots']);
+        // await expert.populate()
+        // const { bookedSlots } = expert
+        // const appointments = [];
+        // for(let i=0; i<bookedSlots.length; i++) {
+        //     const slot = await Slot.findById(bookedSlots[i]);
+        //     const user = await User.findById(slot.userId, ['name', 'pic']);
+        //     appointments.push({ slot, user});
+        // }
+        // res.json(appointments);
+        const users = await User.find({type:"USER"})
+        var listOfUsers = []
+        var list = []
+        for(var i = 0; i< users.length ; i++){
+            var currentUser = users[i]
+            if(currentUser.paid.length > 0 && currentUser.paid.indexOf(req.body.expertID) != -1){
+                list.push(currentUser.name)
+                list.push(currentUser.pic)
+                listOfUsers.push(list)
+            }
         }
-        res.json(appointments);
+        res.send({listOfUsers})
+
     } catch (error) {
         console.log(error);
     }
