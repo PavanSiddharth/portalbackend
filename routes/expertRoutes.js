@@ -68,11 +68,14 @@ router.post('/appointments', async (req, res) => {
         for(var i = 0; i< users.length ; i++){
             var currentUser = users[i]
             if(currentUser.paid.length > 0 && currentUser.paid.indexOf(req.body.expertID) != -1){
+                const slotinfo = await Slot.find({expertId:req.body.expertID, userId:currentUser._id})
                 list.push(currentUser.name)
                 list.push(currentUser.pic)
+                list.push(slotinfo)
                 listOfUsers.push(list)
             }
         }
+        
         res.send({listOfUsers})
 
     } catch (error) {
