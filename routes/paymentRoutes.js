@@ -3,7 +3,6 @@ const express = require('express');
 const { User, Slot } = require('../models');
 
 const Razorpay = require('razorpay');
-const { findByIdAndUpdate } = require('../models/userModel');
 
 const router = express.Router();
 
@@ -39,6 +38,7 @@ router.post('/status',(req,res)=>{
 
 router.post('/success' , async (req,res) => {
     try{
+      console.log("HELLO");
         const userinf = await User.findOne({ type: "USER", _id : req.body.userID })
         var paidarray = userinf.paid
         if(paidarray.indexOf(req.body.expertID) == -1){

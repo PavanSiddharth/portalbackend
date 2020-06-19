@@ -50,7 +50,7 @@ router.get('/getexperts', async (req, res) => {
     }
 })*/
 
-router.get('/appointments', async (req, res) => {
+router.post('/appointments', async (req, res) => {
     try {
         // const expert = await User.findById(req.user._id, ['bookedSlots']);
         // await expert.populate()
@@ -63,20 +63,19 @@ router.get('/appointments', async (req, res) => {
         // }
         // res.json(appointments);
         const users = await User.find({type:"USER"})
-        var listOfUsers = []
-        var list = []
+        var appointments = []
+        var user = []
         for(var i = 0; i< users.length ; i++){
             var currentUser = users[i]
             if(currentUser.paid.length > 0 && currentUser.paid.indexOf(req.body.expertID) != -1){
-                const slotinfo = await Slot.find({expertId:req.body.expertID, userId:currentUser._id})
-                list.push(currentUser.name)
-                list.push(currentUser.pic)
-                list.push(slotinfo)
-                listOfUsers.push(list)
+                const slot = await Slot.find({expertId:req.body.expertID, userId:currentUser._id})
+                user.push(currentUser.name)
+                user.push(currentUser.pic)
+                appointments.push({slot,user});
             }
         }
         
-        res.send({listOfUsers})
+        res.json(appointments);
 
     } catch (error) {
         console.log(error);
