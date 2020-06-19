@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     branch: { type: String },
     desc: { type: String },
     emailVerified: { type: Boolean, default: false },
-    wishlist : {type: Boolean, default: false},
+    wishlist : {type: Array},
     current_for_user : {type: Boolean, default: false},
     past_for_user : {type: Boolean, default: false},
     paid : { type: Array }
