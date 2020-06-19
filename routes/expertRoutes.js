@@ -67,15 +67,16 @@ router.post('/appointments', async (req, res) => {
         var user = []
         for(var i = 0; i< users.length ; i++){
             var currentUser = users[i]
-            if(currentUser.paid.length > 0 && currentUser.paid.indexOf(req.body.expertID) != -1){
+            if(currentUser.paid.length > 0 && currentUser.paid.indexOf(req.body.expertId) != -1){
                 const slot = await Slot.find({expertId:req.body.expertID, userId:currentUser._id})
                 user.push(currentUser.name)
                 user.push(currentUser.pic)
-                appointments.push({slot,user});
+
+                appointments.push({slot,user})
             }
         }
         
-        res.json(appointments);
+        res.json(appointments)
 
     } catch (error) {
         console.log(error);
@@ -84,34 +85,47 @@ router.post('/appointments', async (req, res) => {
 
 router.post('/wishlist', async (req, res) => {
     try {
-        const wishlist = await User.findById(req.body.expertId,
+
+        console.log(req.body.expertId);
+        console.log(req.body.userId);
+        const wishlist1 = await User.findById(req.body.userId,
           ['wishlist']
-        );
-        console.log("Wishlist is "+ !(wishlist.wishlist));
+        )
+        const wishlist = wishlist1.wishlist;
+
+        if(wishlist.indexOf(req.body.expertId) == -1){
+            wishlist.push(req.body.expertId);
+        }
         
-        const expert = await User.findOneAndUpdate({_id: req.body.expertId}, {wishlist:!(wishlist.wishlist)}, {
-            new:true
+        const data = await User.findOneAndUpdate({_id: req.body.userId}, {wishlist:wishlist}, {
+           new:true
         } 
           );  
-        /*const expert = await User.findByIdAndUpdate(
-            { _id:req.body.expertId },
-            { wishlist:true },
-            function(err, result) {
-              if (err) {
-                res.send(err);
-              } else {
-                res.send(result);
-              }
-            }
-          );*/
-          res.send(expert);
-          console.log(expert)
+          res.send(data);
+         console.log(data)
             
     }
      catch (error) {
         console.log(error);
     }
 })
+
+
+router.post('/faved', async (req, res) => {
+    try {
+        console.log(req.body.userId);
+        const wishlist1 = await User.findById(req.body.userId,
+          ['wishlist']
+        )
+        const wishlist = wishlist1.wishlist;
+          res.send(wishlist);
+    }
+     catch (error) {
+        console.log(error);
+    }
+})
+
+
 
 router.get('/profile', async (req, res) => {
     try {
