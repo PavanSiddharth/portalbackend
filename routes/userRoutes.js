@@ -4,7 +4,11 @@ const { User, Slot } = require('../models');
 
 const router = express.Router();
 
-router.get('/appointments', async (req, res) => {
+router.post('/appointments', async (req, res) => {
+
+    const userinf = await User.findOne({ type: "USER", _id : req.body.userID})
+    var paidarray = userinf.paid;
+    console.log(paidarray)
     const user = await User.find({type:"EXPERT"});
     const appointments = { 
         wishlist: [],
@@ -16,8 +20,8 @@ router.get('/appointments', async (req, res) => {
         if(user[i].wishlist === true) {
             appointments.wishlist.push(user[i]);
         }
-        if (user[i].current_for_user === true) {
-            appointments.upcoming.push(user[i]);
+        if(paidarray.indexOf(user[i]._id) != -1){
+          appointments.upcoming.push(user[i]);
         }
         if (user[i].past_for_user === true) {
             appointments.past.push(user[i]);
