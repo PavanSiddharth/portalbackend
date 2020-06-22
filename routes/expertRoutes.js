@@ -2,6 +2,7 @@ const express = require('express');
 
 const { User, Slot} = require('../models');
 const Expert  = require('../models/expertModel');
+const { callbackPromise } = require('nodemailer/lib/shared');
 const router = express.Router();
 
 router.get('/getexperts', async (req, res) => {
@@ -124,6 +125,77 @@ router.post('/faved', async (req, res) => {
         console.log(error);
     }
 })
+
+
+
+router.post('/ready', async (req, res) => {
+    let arr =[];
+    try {
+        let i=0;
+        const experts = await User.findById(req.body.userId, 
+            ['bookedSlots']
+        );
+        experts.bookedSlots.map((expert)=>{
+          i++;
+        })
+        const d = new Date();
+        const date = d.toString().split("T")[0].slice(0,15);
+        const time = d.toTimeString().slice(0,5);
+        console.log(date);
+        console.log(time);
+        console.log(experts.bookedSlots);
+       experts.bookedSlots.map((expert,index,arr1) => {
+            Slot.findOne({expertId:expert,userId:req.body.userId},function(err, result) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  if(result!=null)
+                  {
+                    console.log(result.Date.toString().slice(0,15))
+                    console.log(result.slot.slice(0,5));
+                    console.log(result.slot.slice(6));
+                    if(result.Date.toString().slice(0,15) === date && time>result.slot.slice(0,5) && time<result.slot.slice(6))
+                    {
+                        console.log("Yes");
+                        arr.push({[result.expertId]:1})
+                    }
+                    else{
+                        arr.push("Nothing")
+                    }
+                  }
+                  else
+                  {
+                    arr.push("Nothing")
+                  }
+                  let arr2 = []
+                  arr2 = myfun();
+                  if(arr2!==undefined)
+                  {
+                  if(arr2.length===i)
+                  {
+                      console.log(arr2);
+                      res.send(arr2)
+                      return arr2;
+                  }
+                }
+                  function myfun()
+                  {                  
+                   if(arr.length===i)
+                      return arr;
+                  else
+                      setTimeout(myfun,10);
+                }
+                }
+              }); 
+
+        })
+        }
+ catch (error) {
+        console.log(error);
+    }
+
+})
+
 
 
 
