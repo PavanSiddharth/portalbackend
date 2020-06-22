@@ -161,17 +161,35 @@ router.post('/ready', async (req, res) => {
                         arr.push({[result.expertId]:1})
                     }
                     else{
-                        arr.push({[result.expertId]:0})
+                        arr.push("Nothing")
                     }
                   }
-                  //if(expert==arr1[arr1.length-1])
-                  //{
-                    //  console.log(arr);
-                  //}
-                  if(arr.length===i)
+                  else
+                  {
+                    arr.push("Nothing")
+                  }
+                  let arr2 = []
+                  arr2 = myfun();
+                  console.log(arr2);
+                  if(arr2!==undefined)
+                  {
+                  if(arr2.length===i)
+                  {
+                      res.send(arr2)
+                  }
+                }
+                  function myfun()
+                  {                  
+                   if(arr.length===i)
                   {
                       console.log(arr);
+                      return arr;
                   }
+                  else
+                  {
+                      setTimeout(myfun,10);
+                  }
+                }
                 }
               }); 
 
