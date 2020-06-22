@@ -139,7 +139,7 @@ router.post('/ready', async (req, res) => {
           i++;
         })
         const d = new Date();
-        const date = d.toString().split("T")[0].slice(0,15);
+        const date = d.toString().slice(0,15);
         const time = d.toTimeString().slice(0,5);
         console.log(date);
         console.log(time);
@@ -149,11 +149,14 @@ router.post('/ready', async (req, res) => {
                 if (err) {
                   console.log(err);
                 } else {
+                    console.log(result);
                   if(result!=null)
                   {
                     console.log(result.Date.toString().slice(0,15))
                     console.log(result.slot.slice(0,5));
                     console.log(result.slot.slice(6));
+                    console.log(time>result.slot.slice(0,5))
+                    console.log(time<result.slot.slice(6))
                     if(result.Date.toString().slice(0,15) === date && time>result.slot.slice(0,5) && time<result.slot.slice(6))
                     {
                         console.log("Yes");
