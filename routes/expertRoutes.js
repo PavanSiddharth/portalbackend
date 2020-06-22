@@ -149,7 +149,6 @@ router.post('/ready', async (req, res) => {
                 if (err) {
                   console.log(err);
                 } else {
-                  console.log(result);
                   if(result!=null)
                   {
                     console.log(result.Date.toString().slice(0,15))
@@ -170,25 +169,21 @@ router.post('/ready', async (req, res) => {
                   }
                   let arr2 = []
                   arr2 = myfun();
-                  console.log(arr2);
                   if(arr2!==undefined)
                   {
                   if(arr2.length===i)
                   {
+                      console.log(arr2);
                       res.send(arr2)
+                      return arr2;
                   }
                 }
                   function myfun()
                   {                  
                    if(arr.length===i)
-                  {
-                      console.log(arr);
                       return arr;
-                  }
                   else
-                  {
                       setTimeout(myfun,10);
-                  }
                 }
                 }
               }); 
