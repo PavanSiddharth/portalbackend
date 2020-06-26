@@ -44,7 +44,7 @@ router.post('/appointments', async (req, res) => {
         var user = []
         for(var i = 0; i< users.length ; i++){
             var currentUser = users[i]
-            if(currentUser.paid.length > 0 && currentUser.paid.indexOf(req.body.expertId) != -1){
+            if(currentUser.paid.length > 0 && currentUser.paid.indexOf(req.body.expertID) != -1){
                 const slot = await Slot.find({expertId:req.body.expertID, userId:currentUser._id})
                 user.push(currentUser.name)
                 user.push(currentUser.pic)
@@ -52,7 +52,7 @@ router.post('/appointments', async (req, res) => {
                 appointments.push({slot,user})
             }
         }
-        
+
         res.json(appointments)
 
     } catch (error) {
