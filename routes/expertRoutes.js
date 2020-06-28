@@ -68,10 +68,15 @@ router.post('/wishlist', async (req, res) => {
         const wishlist1 = await User.findById(req.body.userId,
           ['wishlist']
         )
-        const wishlist = wishlist1.wishlist;
+        let wishlist = wishlist1.wishlist;
 
         if(wishlist.indexOf(req.body.expertId) == -1){
             wishlist.push(req.body.expertId);
+        }
+
+        else
+        {
+            wishlist = wishlist.filter(wish => wish!=req.body.expertId);
         }
         
         const data = await User.findOneAndUpdate({_id: req.body.userId}, {wishlist:wishlist}, {
