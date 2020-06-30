@@ -186,7 +186,7 @@ router.post('/ready', async (req, res) => {
 router.get('/profile', async (req, res) => {
     try {
         const expert = await User.findById(req.user._id, 
-            ['pic', 'name', 'username', 'email', 'mobile', 'institution', 'branch', 'desc']
+            ['type','pic', 'name', 'username', 'email', 'mobile', 'institution', 'branch', 'desc']
         );
         const expert_data = await Expert.findOne({expertId:req.user._id},function(err, result) {
             if (err) {
