@@ -68,6 +68,22 @@ router.post('/approve', async (req, res) => {
     }
 })
 
+
+router.post('/reschedule', async (req, res) => {
+    try {
+        const slot = await Slot.findByIdAndUpdate(req.body.id, {
+            slot : req.body.slot,
+            approved : true
+        })
+        const rescheduledSlot = await slot.save();
+        console.log(rescheduledSlot)
+        res.json(rescheduledSlot);
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
 router.post('/reject', async (req, res) => {
     try {
         const slot = await Slot.findByIdAndRemove(req.body.id);
