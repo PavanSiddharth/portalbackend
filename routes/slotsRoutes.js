@@ -17,10 +17,59 @@ router.get('/getslots', async (req, res) => {
     res.json(bookedSlots);
 })
 
+router.post('/getexpertslots',async(req,res) => {
+    const expertID = req.body.expertID;
+    try 
+    {
+        const expertSlots = await User.findById(expertID,
+            ['slots']
+          )
+          res.json(expertSlots)
+    }
+    catch(error)
+    {
+        console.log(error);
+    }
+})
+
+router.post('/deleteslots',async(req,res) => {
+    const expertID = req.body.expertID;
+    const slots = req.body.slots
+    console.log(slots)
+    try 
+    {
+        const expertSlots = await User.findById(expertID,
+            ['slots']
+          )
+          console.log(expertSlots.slots)
+          let modifiedslots = expertSlots.slots
+          slots.map((slot) => {
+              let date = slot.slice(0,10)
+              let time = slot.slice(11,)
+              delete modifiedslots[date][time]
+          })
+          console.log(modifiedslots)
+          const response = await User.findByIdAndUpdate(expertID, {
+            slots : modifiedslots,
+        } , { new:true })
+          res.json(response)
+    }
+    catch(error)
+    {
+        console.log(error);
+    }
+})
+
 router.post('/addslots', async (req, res) => {
+    const expertSlots = await User.findById(req.user._id,
+        ['slots']
+      )
+      console.log(expertSlots)
+    let slots = {...req.body, ...expertSlots.slots};
     const expert = await User.findOneAndUpdate({_id: req.user._id}, {
-        slots: req.body,
+        slots: slots,
     })
+
     console.log(expert);
     expert.save();
 })
