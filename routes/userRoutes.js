@@ -4,6 +4,14 @@ const { User, Slot } = require('../models');
 
 const router = express.Router();
 
+router.post('/getUser', async (req, res) => {
+    const userId = req.body.userId
+    const userinf = await User.findById(userId)
+    console.log(userinf);
+    res.json(userinf)
+
+});
+
 router.post('/appointments', async (req, res) => {
 
     const userinf = await User.findOne({ type: "USER", _id : req.body.userID})
