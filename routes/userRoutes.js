@@ -12,6 +12,26 @@ router.post('/getUser', async (req, res) => {
 
 });
 
+router.post('/profile', async (req, res) => {
+    try {
+        const expert = await User.findById(req.body.userID, 
+            ['type','pic', 'name', 'username', 'email', 'mobile', 'institution', 'branch', 'desc']
+        );
+        const expert_data = await User.findOne({_id:req.body.userID},function(err, result) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(result);
+            }
+          }); 
+        var expert1 = {expert : expert , expert_data:expert_data};
+        console.log(expert1);
+        res.json(expert1);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 router.post('/appointments', async (req, res) => {
 
     const userinf = await User.findOne({ type: "USER", _id : req.body.userID})

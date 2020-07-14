@@ -40,12 +40,21 @@ router.post('/success' , async (req,res) => {
     try{
       console.log("HELLO");
         const userinf = await User.findOne({ type: "USER", _id : req.body.userID })
+        const expertinf = await User.findOne({ type: "EXPERT", _id : req.body.expertID})
+
+        let amt = (req.body.amount)/100;
+        var amount = expertinf.amount;
+        amount+=amt;
+
+        const newdoc1 =  await User.findByIdAndUpdate( { _id : req.body.expertID } , { amount: amount },{ useFindAndModify :false} )
+            res.send("Changes made in the db")
         var paidarray = userinf.paid
         if(paidarray.indexOf(req.body.expertID) == -1){
             paidarray.push(req.body.expertID)
             const newdoc =  await User.findByIdAndUpdate( { _id : req.body.userID } , { paid: paidarray },{ useFindAndModify :false} )
-            res.send("Changes made in the db")
+            //res.send("Changes made in the db")
         }
+        
     }
     catch(error){
       console.log(error);
