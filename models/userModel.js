@@ -18,7 +18,9 @@ const userSchema = new mongoose.Schema({
     wishlist : {type: Array},
     current_for_user : {type: Boolean, default: false},
     past_for_user : {type: Boolean, default: false},
-    paid : { type: Array }
+    paid : { type: Array },
+    call_count : {type: Number, default: 0},
+    amount : {type: Number, default: 0}
 });
 
 module.exports = mongoose.model("User", userSchema);
