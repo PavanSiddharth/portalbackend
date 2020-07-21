@@ -74,6 +74,36 @@ router.post('/addslots', async (req, res) => {
     expert.save();
 })
 
+router.post('/copyslots', async (req, res) => {
+    let slots = null;
+    let modifiedslots;
+    console.log(req.body.date);
+    const date = req.body.date;
+    const prevday = date.split('/')[1] - 1;
+    let prevdate = date.split('/')[0]+'/'+prevday+'/'+date.split('/')[2]
+    console.log(req.user._id)
+    console.log(prevdate);
+    const expertSlots = await User.findById(req.user._id,
+        ['slots']
+      )
+      console.log(expertSlots.slots)
+      for(i in expertSlots.slots)
+      {
+          if(i===prevdate)
+          {
+            slots = expertSlots.slots[i]
+          }
+      }
+      if(slots!==null)
+      {
+        res.json(slots);
+      }
+      else
+      {
+          res.json({message:"No slots selected for previous day"});
+      }
+})
+
 router.post('/bookslot', async (req, res) => {
     const { slot, expertId, date } = req.body;
     try {
