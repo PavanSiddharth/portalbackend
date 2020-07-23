@@ -1,9 +1,8 @@
-const server = require("http").createServer(function (req, res) {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-});
+const server = require("http").createServer();
 
 const io = require("socket.io")(server, {
   path: "/messaging",
+  serveClient: false,
   pingInterval: 10000,
   pingTimeout: 5000,
 });
