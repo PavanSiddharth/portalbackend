@@ -1,3 +1,4 @@
+const { Chat } = require('./models/chatModel');
 const server = require("http").createServer();
 
 const io = require("socket.io")(server, {
@@ -13,4 +14,4 @@ io.of("/test").on("connect", (socket) => {
 
 const port = process.env.PORT || 8002;
 
-server.listen(port, () => console.log("Socket server online at port ", port));
+server.listen(port, () => console.log("Socket server online at port", port));

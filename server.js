@@ -9,7 +9,6 @@ require("dotenv").config();
 const authRoutes = require("./routes/authRoutes");
 const slotsRoutes = require("./routes/slotsRoutes");
 const expertRoutes = require("./routes/expertRoutes");
-// const chatRoutes = require("./routes/chatRoutes");
 const userRoutes = require("./routes/userRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 
@@ -55,5 +54,4 @@ app.use(setUser);
 app.get("/auth/user", (req, res) => res.json(req.user));
 app.use("/slots", slotsRoutes);
 app.use("/expert", expertRoutes);
-// app.use("/chats", chatRoutes);
 app.listen(port, () => console.log(`Server Online on port ${port}...`));
