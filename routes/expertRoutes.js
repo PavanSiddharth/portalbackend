@@ -89,6 +89,7 @@ router.post('/ready', async (req, res) => {
     let arr = [];
     try {
         let i = 0;
+        console.log("req.body.userId "+req.body.userId);
         const experts = await User.findById(req.body.userId,
             ['bookedSlots']
         );
@@ -115,7 +116,7 @@ router.post('/ready', async (req, res) => {
                         console.log(time < result.slot.slice(6))
                         if (result.Date.toString().slice(0, 15) === date && time > result.slot.slice(0, 5) && time < result.slot.slice(6)) {
                             console.log("Yes");
-                            arr.push({ [result.expertId]: 1 })
+                            arr.push({ [result.expertId]: result._id })
                         }
                         else {
                             arr.push("Nothing")

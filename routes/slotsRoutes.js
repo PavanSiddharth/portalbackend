@@ -162,6 +162,29 @@ router.post('/reschedule', async (req, res) => {
     }
 })
 
+router.post('/callend', async (req, res) => {
+    try {
+        const currentslot = await Slot.findById(req.body.slotid);
+        let amount = currentslot.amount
+        let expertId = currentslot.expertId
+        const slot = await Slot.findByIdAndUpdate(req.body.slotid, {
+            rating : req.body.rating
+        })
+        const currentexpert = await User.findById(expertId);
+        let currentamount = currentexpert.amount
+        let call_count = currentexpert.call_count
+        console.log(call_count)
+        call_count = call_count + 1;
+        const updatedexpert = await User.findByIdAndUpdate(expertId, {
+            amount : amount+currentamount,
+            call_count : call_count
+        })
+        res.json({updatedSlot:slot,updatedExpert:updatedexpert});
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 
 router.post('/reject', async (req, res) => {
     try {

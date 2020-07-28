@@ -11,7 +11,6 @@ let instance = new Razorpay({
     key_secret: "89CUTDzmDYbIYqgpUabjGtav",
   });
 
-
 router.post('/status',(req,res)=>{
     try{
         var amt;
@@ -41,13 +40,33 @@ router.post('/success' , async (req,res) => {
       console.log("HELLO");
         const userinf = await User.findOne({ type: "USER", _id : req.body.userID })
         const expertinf = await User.findOne({ type: "EXPERT", _id : req.body.expertID})
-
+        console.log(req.body);
         let amt = (req.body.amount)/100;
-        var amount = expertinf.amount;
-        amount+=amt;
+        const newSlot = await Slot.create({
+          expertId:req.body.expertID, 
+          userId : req.body.userID,
+          slot:req.body.slot,
+          Date : req.body.date,
+          amount :amt,
+          approved:true
+      })
 
-        const newdoc1 =  await User.findByIdAndUpdate( { _id : req.body.expertID } , { amount: amount },{ useFindAndModify :false} )
-            res.send("Changes made in the db")
+      const user = await User.findById(req.body.userID);
+        if(user.bookedSlots === undefined) user.bookedSlots = [];
+        await user.bookedSlots.push(req.body.expertID);
+        user.markModified('bookedSlots');
+        const updatedUser = await user.save();
+
+        const expert = await User.findById(req.body.expertID);
+        if(expert.bookedSlots === undefined) expert.bookedSlots = [];
+        await expert.bookedSlots.push(newSlot._id);
+        expert.markModified('bookedSlots');
+        const updatedExpert = await expert.save();
+
+      res.json({newSlot:newSlot,updatedExpert:updatedExpert,updatedUser:updatedUser});
+
+        //const newdoc1 =  await User.findByIdAndUpdate( { _id : req.body.expertID } , { amount: amount },{ useFindAndModify :false} )
+            //res.send("Changes made in the db")
         var paidarray = userinf.paid
         if(paidarray.indexOf(req.body.expertID) == -1){
             paidarray.push(req.body.expertID)
